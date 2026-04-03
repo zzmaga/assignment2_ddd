@@ -14,6 +14,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 CSV_PATH = Path("qazaqprice_dataset.csv")
@@ -40,7 +41,8 @@ def main() -> None:
     # 1. Источники
     fig1, ax = plt.subplots(figsize=(7, 4))
     vc = df["source"].value_counts()
-    ax.bar(vc.index.astype(str), vc.values, color=["#c62828", "#1565c0"])
+    colors = plt.cm.Set2(np.linspace(0, 1, len(vc)))
+    ax.bar(vc.index.astype(str), vc.values, color=colors)
     ax.set_title("Распределение объявлений по источникам-конкурентам")
     ax.set_ylabel("Количество позиций")
     charts.append(("Источники данных", fig_to_b64(fig1)))
@@ -71,15 +73,12 @@ def main() -> None:
     ax.set_title("Распределение цен (KZT)")
     charts.append(("Распределение цен", fig_to_b64(fig4)))
 
-    # 5. Satu: условие товара
-    if "condition" in df.columns:
-        fig5, ax = plt.subplots(figsize=(6, 4))
-        sub = df[df["source"] == "satu.kz"]
-        if len(sub):
-            c = sub["condition"].fillna("unknown").value_counts()
-            ax.pie(c.values, labels=c.index, autopct="%1.0f%%")
-            ax.set_title("Satu.kz: новый / б/у (доля)")
-        charts.append(("Satu: состояние товара", fig_to_b64(fig5)))
+    # 5. Доля ценовых сегментов (круговая)
+    fig5, ax = plt.subplots(figsize=(6, 4))
+    seg = df["price_segment"].value_counts()
+    ax.pie(seg.values, labels=seg.index, autopct="%1.0f%%")
+    ax.set_title("Доля записей по ценовому сегменту")
+    charts.append(("Ценовые сегменты (доля)", fig_to_b64(fig5)))
 
     parts = [
         "<!DOCTYPE html><html lang='ru'><head><meta charset='utf-8'/>",
