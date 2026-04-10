@@ -1,24 +1,11 @@
-QazaqPrice — журнал очистки
+[2026-04-10T19:42:55.951313+00:00] Загрузка основного CSV...
+[2026-04-10T19:42:57.378427+00:00] Загрузка данных из API (глубокий парсинг)...
+[2026-04-10T19:42:58.832473+00:00] Очистка завершена. Итого строк: 4585
 
-Источник 1: https://raw.githubusercontent.com/ArfaNada/Intelligent-Report-Generator/main/merged_electronics_dataset.csv
-Источник 2: https://api.escuelajs.co/api/v1/products (пагинация)
-Курсы: https://open.er-api.com/v6/latest/USD
-
-[2026-04-10T19:29:05.692225+00:00] Курсы (open.er-api.com, base USD): KZT/USD=477.4863, INR/USD=92.8120
-[2026-04-10T19:29:05.692225+00:00] Загрузка CSV: https://raw.githubusercontent.com/ArfaNada/Intelligent-Report-Generator/main/merged_electronics_dataset.csv
-[2026-04-10T19:29:07.167169+00:00] CSV: строк после разбора цен: 4979 (курс 1 USD = 477.49 KZT, 1 USD = 92.81 INR → 1 INR = 5.1447 KZT).
-[2026-04-10T19:29:08.136757+00:00] Escuela JS: получено товаров: 10 (USD → KZT по 477.49 ₸/$).
-[2026-04-10T19:29:08.141738+00:00] Объединение: исходно 4989 строк.
-[2026-04-10T19:29:08.143746+00:00] Дубликаты по URL: 0.
-[2026-04-10T19:29:08.147759+00:00] IQR: границы [-9,266 – 19,545] KZT; скорректировано выбросов: 679.
-[2026-04-10T19:29:08.147759+00:00] Итоговых строк: 4989.
-
---- Итог ---
-Строк в CSV: 4989
-Дубликатов: 0
-Выбросов по IQR (до коррекции): 679
-
-По источникам:
-source
-github_amazon_in_electronics_csv    4979
-escuelajs_demo_api                    10
+ИТОГ: 4585 строк.
+Распределение по сегментам:
+price_segment
+low-priced       3842
+middle-priced     333
+high-priced       262
+luxury            148

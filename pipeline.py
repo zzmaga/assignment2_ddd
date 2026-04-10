@@ -275,9 +275,6 @@ def merge_and_clean(
     return df_ok, df_dup, df_out
 
 
-# 1. Удалите функцию save_xml целиком (строки 190-202 в вашем исходнике)
-
-
 def run(quick: bool) -> None:
     report = CleaningReport()
     kzt_usd, inr_usd = fetch_fx_kzt_inr_per_usd()
