@@ -9,9 +9,6 @@ QazaqPrice — Assignment №2: два открытых источника, ≥2
   https://api.escuelajs.co/api/v1/products (пагинация offset/limit)
   Цены в USD — конвертация в ₸ через тот же API курсов.
 
-Запуск:
-  python pipeline.py
-  python pipeline.py --quick
 """
 
 from __future__ import annotations
@@ -135,9 +132,12 @@ def load_github_electronics(
                 "brand": np.nan,
                 "category": cat or "electronics",
                 "price_kzt": round(price_kzt, 2),
-                "old_price_kzt": round(old_kzt, 2)
-                if old_kzt is not None and not (isinstance(old_kzt, float) and np.isnan(old_kzt))
-                else np.nan,
+                "old_price_kzt": (
+                    round(old_kzt, 2)
+                    if old_kzt is not None
+                    and not (isinstance(old_kzt, float) and np.isnan(old_kzt))
+                    else np.nan
+                ),
                 "currency": "KZT",
                 "price_original": price_inr,
                 "currency_original": "INR",
@@ -190,7 +190,11 @@ def load_escuelajs(
             if pu <= 0:
                 continue
             cat = p.get("category") or {}
-            cname = str(cat.get("name") or cat.get("slug") or "general") if isinstance(cat, dict) else "general"
+            cname = (
+                str(cat.get("name") or cat.get("slug") or "general")
+                if isinstance(cat, dict)
+                else "general"
+            )
             api_url = f"{ESCUELA_PRODUCTS}/{pid}"
             rows.append(
                 {
@@ -271,41 +275,28 @@ def merge_and_clean(
     return df_ok, df_dup, df_out
 
 
-def save_xml(df: pd.DataFrame, path: str) -> None:
-    root = ET.Element("products")
-    for _, row in df.iterrows():
-        p = ET.SubElement(root, "product")
-        for col in df.columns:
-            child = ET.SubElement(p, re.sub(r"[^0-9a-zA-Z_]", "_", col))
-            val = row[col]
-            if pd.isna(val):
-                child.text = ""
-            else:
-                child.text = str(val)
-    ET.ElementTree(root).write(path, encoding="utf-8", xml_declaration=True)
+# 1. Удалите функцию save_xml целиком (строки 190-202 в вашем исходнике)
 
 
 def run(quick: bool) -> None:
     report = CleaningReport()
     kzt_usd, inr_usd = fetch_fx_kzt_inr_per_usd()
-    report.add(f"Курсы (open.er-api.com, base USD): KZT/USD={kzt_usd:.4f}, INR/USD={inr_usd:.4f}")
+    report.add(
+        f"Курсы (open.er-api.com, base USD): KZT/USD={kzt_usd:.4f}, INR/USD={inr_usd:.4f}"
+    )
 
     df_csv = load_github_electronics(kzt_usd, inr_usd, quick, report)
     time.sleep(0.2)
     df_api = load_escuelajs(kzt_usd, quick, report)
 
     df = pd.concat([df_csv, df_api], ignore_index=True)
-    if len(df) < 100:
-        raise SystemExit("Слишком мало данных — проверьте сеть.")
+    if not quick and len(df) < 2500:
+        print(f"Внимание: собрано всего {len(df)} строк. Нужно минимум 2500!")
 
     df_clean, df_dup, df_out = merge_and_clean(df, report)
 
     out_csv = "qazaqprice_dataset.csv"
     df_clean.to_csv(out_csv, index=False, encoding="utf-8-sig")
-    df_clean.to_json(
-        "qazaqprice_dataset.json", orient="records", force_ascii=False, indent=2
-    )
-    save_xml(df_clean, "qazaqprice_dataset.xml")
 
     with open("data_cleaning_log.txt", "w", encoding="utf-8") as f:
         f.write("QazaqPrice — журнал очистки\n\n")
@@ -320,7 +311,6 @@ def run(quick: bool) -> None:
         f.write(f"Выбросов по IQR (до коррекции): {len(df_out)}\n")
         f.write("\nПо источникам:\n")
         f.write(df_clean["source"].value_counts().to_string())
-
     print(f"Готово: {len(df_clean)} строк → {out_csv}")
     print(df_clean["source"].value_counts())
 
