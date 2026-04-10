@@ -1,11 +1,39 @@
-[2026-04-10T19:42:55.951313+00:00] Загрузка основного CSV...
-[2026-04-10T19:42:57.378427+00:00] Загрузка данных из API (глубокий парсинг)...
-[2026-04-10T19:42:58.832473+00:00] Очистка завершена. Итого строк: 4585
+QazaqPrice - data cleaning log
 
-ИТОГ: 4585 строк.
-Распределение по сегментам:
+Source 1: https://raw.githubusercontent.com/ArfaNada/Intelligent-Report-Generator/main/merged_electronics_dataset.csv
+Source 2: https://api.escuelajs.co/api/v1/products (electronics only)
+Source 3: Apple / Samsung / Google official store pages
+FX: https://open.er-api.com/v6/latest/USD
+
+[2026-04-10T21:01:49.965709+00:00] FX rates from https://open.er-api.com/v6/latest/USD: KZT/USD=477.4863, INR/USD=92.8120.
+[2026-04-10T21:01:49.965709+00:00] Loading CSV: https://raw.githubusercontent.com/ArfaNada/Intelligent-Report-Generator/main/merged_electronics_dataset.csv
+[2026-04-10T21:01:52.764024+00:00] CSV rows after price parsing: 4979 (1 USD = 477.49 KZT, 1 USD = 92.81 INR).
+[2026-04-10T21:01:53.994582+00:00] Escuela JS modern electronics rows: 10 (USD to KZT using 477.49 KZT/USD).
+[2026-04-10T21:01:56.387816+00:00] Live source price not found for Apple AirPods Pro 2.
+[2026-04-10T21:01:58.374175+00:00] Live source price not found for Apple MacBook Air.
+[2026-04-10T21:02:06.136696+00:00] Live source price not found for Google Pixel Tablet.
+[2026-04-10T21:02:10.505297+00:00] Live modern gadget rows collected: 7.
+[2026-04-10T21:02:10.509882+00:00] Combined rows before cleaning: 4996.
+[2026-04-10T21:02:10.533813+00:00] Duplicates removed: 0.
+[2026-04-10T21:02:10.535817+00:00] IQR range [0 - 19,545] KZT; flagged outliers without price clipping: 682.
+[2026-04-10T21:02:10.536814+00:00] Rows after cleaning: 4996.
+
+--- Summary ---
+Rows in CSV: 4996
+Duplicates: 0
+IQR outliers flagged: 682
+
+By source:
+source
+github_amazon_in_electronics_csv    4979
+escuelajs_demo_api                    10
+samsung_official_store_live            3
+apple_official_store_live              2
+google_store_live                      2
+
+By price segment:
 price_segment
-low-priced       3842
-middle-priced     333
-high-priced       262
-luxury            148
+low-priced       4729
+middle-priced     223
+high-priced        37
+luxury              7
