@@ -1,0 +1,44 @@
+QazaqPrice analysis summary
+===========================
+
+Всего строк:              5,017
+Уникальных брендов:       53
+Уникальных категорий:     5
+Аномалий цен (1.5×IQR):   717
+Мин. цена, KZT:           180
+Макс. цена, KZT:          956,989
+Медиана цены, KZT:        3,294
+
+Ценовые сегменты:
+  low-priced          4,731  (94.3%)
+  middle-priced         238  (4.7%)
+  high-priced            38  (0.8%)
+  luxury                 10  (0.2%)
+
+Топ брендов:
+  Unknown               2,907
+  Samsung                 314
+  boAt                    229
+  Amazon                  199
+  OnePlus                 161
+  Apple                   157
+  Xiaomi                  135
+  HP                      110
+  SanDisk                  80
+  PTron                    73
+  Realme                   70
+  JBL                      56
+  TP-Link                  47
+  Lenovo                   45
+  Google                   43
+
+Топ категорий:
+  tv, audio & cameras / All Electronics     4,979
+  smartphones                                  16
+  mobile-accessories                           14
+  laptops                                       5
+  tablets                                       3
+
+По источникам:
+  github_amazon_in_electronics_csv               4,979
+  dummyjson_api                                     38
