@@ -1,0 +1,10 @@
+ADF stationarity test
+=====================
+ADF statistic: -2.1292
+p-value:       0.232945
+lags used:     5
+nobs:          246
+critical values:
+  1%: -3.4572
+  5%: -2.8734
+  10%: -2.5731

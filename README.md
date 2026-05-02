@@ -13,6 +13,9 @@
 - `qazaqprice_dataset.csv` — очищенный результат после объединения данных.
 - `data_cleaning_log.txt` — лог всех шагов очистки, удаления дублей и флагов выбросов.
 - `analysis.py` — новый скрипт для визуализации и создания базовых «дашбордов».
+- `reviews_api.py` — сбор отзывов конкурентов через API (2GIS / Google Places / Twitter).
+- `sentiment_analysis.py` — классификация тональности (negative/neutral/positive), оценка качества, динамика.
+- `trends_analysis.py` — Google Trends 2005–2025: визуализация ряда, ACF/стационарность, прогноз (горизонт=10).
 - `requirements.txt` — зависимости проекта.
 
 ## Что уже реализовано
@@ -91,4 +94,69 @@ python pipeline.py
 python analysis.py
 ```
 
-Если хотите, я могу также дополнить проект Jupyter Notebook с интерактивными графиками и готовой отчётной страницей.
+---
+
+## Задание: анализ тональности отзывов (Assignment 2 / Sentiment)
+
+### 1) Сбор данных (минимум 3 компании)
+
+В `reviews_api.py` реализованы функции сбора:
+- **2GIS**: `fetch_2gis_reviews()` (нужен `DGIS_API_KEY` + `firm_id`)
+- **Google Places**: `fetch_google_place_reviews()` (нужен `GOOGLE_PLACES_API_KEY` + `place_id`)
+- **Twitter/X**: `fetch_twitter_recent()` (нужен `TWITTER_BEARER_TOKEN`)
+
+Сохранение результата: `data/reviews_raw.csv`.
+
+Примечание: в репозитории лежит **пример** `data/reviews_raw.csv` (несколько строк), чтобы пайплайн запускался сразу. Для сдачи замените его на выгрузку из API по вашим конкурентам.
+
+Запуск (после выставления переменных окружения и заполнения ID конкурентов в `example_run()`):
+
+```bash
+python reviews_api.py
+```
+
+### 2) Анализ тональности + качество + динамика
+
+Скрипт `sentiment_analysis.py`:
+- классифицирует отзывы на **negative / neutral / positive** (модель RuBERT),
+- оценивает качество (слабая разметка по рейтингу: 1–2 / 3 / 4–5),
+- строит динамику долей тональности и средней оценки по времени.
+
+```bash
+python sentiment_analysis.py
+```
+
+Выход:
+- `data/reviews_scored.csv`
+- `plots_sentiment/sentiment_share_over_time.png`
+- `plots_sentiment/avg_rating_over_time.png`
+- `plots_sentiment/sentiment_by_competitor.png`
+- `plots_sentiment/quality_report.txt`
+
+### 3) Дашборд (Power BI / Tableau)
+
+Для дашборда используйте `data/reviews_scored.csv`:
+- разрезы: `competitor`, `source`, `sentiment`, `created_at/month`
+- метрики: доля негативных, средний rating, топ тем негативных отзывов (фильтр `sentiment=negative`)
+
+---
+
+## Задание: Google Trends (2005–2025)
+
+Скрипт `trends_analysis.py`:
+- скачивает ряд по термину (по умолчанию: `смартфон`, geo=`KZ`),
+- визуализирует ряд,
+- проверяет стационарность (ADF),
+- строит ACF,
+- прогнозирует на 10 шагов (SARIMAX baseline).
+
+```bash
+python trends_analysis.py
+```
+
+Выход:
+- `data/trends_<term>_<geo>.csv`
+- `plots_trends/trends_timeseries.png`
+- `plots_trends/trends_acf.png`
+- `plots_trends/stationarity_adf.txt`
+- `plots_trends/trends_forecast.png`

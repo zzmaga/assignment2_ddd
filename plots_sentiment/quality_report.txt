@@ -1,0 +1,21 @@
+Quality evaluation vs rating-derived labels (weak supervision)
+============================================================
+
+Rows with ratings used: 4
+
+Classification report:
+              precision    recall  f1-score   support
+
+    negative      1.000     1.000     1.000         1
+     neutral      0.000     0.000     0.000         1
+    positive      0.667     1.000     0.800         2
+
+    accuracy                          0.750         4
+   macro avg      0.556     0.667     0.600         4
+weighted avg      0.583     0.750     0.650         4
+
+Confusion matrix:
+               pred_negative  pred_neutral  pred_positive
+true_negative              1             0              0
+true_neutral               0             0              1
+true_positive              0             0              2
